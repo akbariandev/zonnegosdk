@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/akbariandev/zonnegosdk"
 	"github.com/gagliardetto/solana-go"
-	"github.com/zonne/zonnegosdk"
 )
 
 // MarketplaceDemo demonstrates a complete energy marketplace workflow

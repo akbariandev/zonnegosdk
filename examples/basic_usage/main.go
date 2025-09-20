@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/akbariandev/zonnegosdk"
 	"github.com/gagliardetto/solana-go"
-	"github.com/zonne/zonnegosdk"
 )
 
 func main() {
