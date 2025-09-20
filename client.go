@@ -10,9 +10,6 @@ import (
 	"github.com/near/borsh-go"
 )
 
-// ProgramID is the Zonne energy marketplace program ID
-var ProgramID = solana.MustPublicKeyFromBase58("AhgnNzTBJRiCUdaFYQsziXKVxfJSLHqc6AqXwfE5zDUa")
-
 // Client represents a client for interacting with the Zonne energy marketplace program
 type Client struct {
 	rpcClient *rpc.Client
@@ -20,10 +17,10 @@ type Client struct {
 }
 
 // NewClient creates a new Zonne SDK client
-func NewClient(rpcEndpoint string) *Client {
+func NewClient(rpcEndpoint, programID string) *Client {
 	return &Client{
 		rpcClient: rpc.New(rpcEndpoint),
-		programID: ProgramID,
+		programID: solana.MustPublicKeyFromBase58(programID),
 	}
 }
 
