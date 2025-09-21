@@ -228,7 +228,7 @@ Creates a client with a custom program ID (useful for testing).
 
 ### Crossmint Integration
 - `MintEnergyTokensForCrossmint(params MintRecordCreationParams, payer solana.PublicKey) (string, error)`
-- `CreateTransactionForCrossmint(instruction solana.Instruction, payer solana.PublicKey, recentBlockhash solana.Hash) (string, error)`
+- `CreateTransactionForCrossmint(instruction solana.Instruction, payer solana.PublicKey, latestBlockhash solana.Hash) (string, error)`
 
 ## Data Types
 
@@ -371,8 +371,8 @@ if err != nil {
     log.Fatal(err)
 }
 
-// Get recent blockhash
-recentBlockhash, err := client.GetRPCClient().GetRecentBlockhash(ctx, rpc.CommitmentFinalized)
+// Get latest blockhash
+latestBlockhash, err := client.GetRPCClient().GetLatestBlockhash(ctx, rpc.CommitmentFinalized)
 if err != nil {
     log.Fatal(err)
 }
@@ -381,7 +381,7 @@ if err != nil {
 base58Tx, err := client.CreateTransactionForCrossmint(
     instruction, 
     payer, 
-    recentBlockhash.Value.Blockhash,
+    latestBlockhash.Value.Blockhash,
 )
 if err != nil {
     log.Fatal(err)

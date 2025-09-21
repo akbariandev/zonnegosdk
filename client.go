@@ -166,13 +166,13 @@ func (c *Client) GetMintRecord(ctx context.Context, producer solana.PublicKey, a
 
 // Transaction building and sending helper
 func (c *Client) SendTransaction(ctx context.Context, transaction *solana.Transaction, signers []solana.PrivateKey) (solana.Signature, error) {
-	// Get recent blockhash
-	recent, err := c.rpcClient.GetRecentBlockhash(ctx, rpc.CommitmentFinalized)
+	// Get latest blockhash
+	latest, err := c.rpcClient.GetLatestBlockhash(ctx, rpc.CommitmentFinalized)
 	if err != nil {
-		return solana.Signature{}, fmt.Errorf("failed to get recent blockhash: %w", err)
+		return solana.Signature{}, fmt.Errorf("failed to get latest blockhash: %w", err)
 	}
 
-	transaction.Message.RecentBlockhash = recent.Value.Blockhash
+	transaction.Message.RecentBlockhash = latest.Value.Blockhash
 
 	// Sign transaction
 	_, err = transaction.Sign(func(key solana.PublicKey) *solana.PrivateKey {

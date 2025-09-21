@@ -12,19 +12,19 @@ import (
 
 func main() {
 	// Initialize the Zonne SDK client
-	client := zonnegosdk.NewClient("http://localhost:8899")
+	client := zonnegosdk.NewClient("https://api.devnet.solana.com", "Aw4Ef9sT3VBv7FXo1qWYR4CQN7LDuTkCcQQC3mxrjwab")
 
 	// Example parameters for minting energy tokens
 	params := zonnegosdk.MintRecordCreationParams{
-		Grid:          solana.MustPublicKeyFromBase58("11111111111111111111111111111111"), // Example grid pubkey
-		Producer:      solana.MustPublicKeyFromBase58("22222222222222222222222222222222"), // Example producer pubkey
+		Grid:          solana.MustPublicKeyFromBase58("11111111111111111111111111111112"), // Example grid pubkey
+		Producer:      solana.MustPublicKeyFromBase58("11111111111111111111111111111113"), // Example producer pubkey
 		Amount:        1000,                                                               // 1000 kWh
 		EnergyType:    uint8(zonnegosdk.EnergyTypeSolar),
-		GridAuthority: solana.MustPublicKeyFromBase58("33333333333333333333333333333333"), // Example grid authority
+		GridAuthority: solana.MustPublicKeyFromBase58("11111111111111111111111111111114"), // Example grid authority
 	}
 
 	// Payer wallet (this would be the Crossmint wallet address)
-	payer := solana.MustPublicKeyFromBase58("44444444444444444444444444444444")
+	payer := solana.MustPublicKeyFromBase58("11111111111111111111111111111115")
 
 	// Create a base58-encoded transaction for Crossmint
 	base58Transaction, err := client.MintEnergyTokensForCrossmint(params, payer)
@@ -79,14 +79,14 @@ func demonstrateOtherOperations(client *zonnegosdk.Client, payer solana.PublicKe
 		return
 	}
 
-	// Get recent blockhash for the transaction
-	recentBlockhash, err := client.GetRPCClient().GetRecentBlockhash(ctx, rpc.CommitmentFinalized)
+	// Get latest blockhash for the transaction
+	latestBlockhash, err := client.GetRPCClient().GetLatestBlockhash(ctx, rpc.CommitmentFinalized)
 	if err != nil {
-		log.Printf("Failed to get recent blockhash: %v", err)
+		log.Printf("Failed to get latest blockhash: %v", err)
 		return
 	}
 
-	gridTx, err := client.CreateTransactionForCrossmint(gridInstruction, payer, recentBlockhash.Value.Blockhash)
+	gridTx, err := client.CreateTransactionForCrossmint(gridInstruction, payer, latestBlockhash.Value.Blockhash)
 	if err != nil {
 		log.Printf("Failed to create grid transaction: %v", err)
 		return
@@ -107,7 +107,7 @@ func demonstrateOtherOperations(client *zonnegosdk.Client, payer solana.PublicKe
 		return
 	}
 
-	listingTx, err := client.CreateTransactionForCrossmint(listingInstruction, payer, recentBlockhash.Value.Blockhash)
+	listingTx, err := client.CreateTransactionForCrossmint(listingInstruction, payer, latestBlockhash.Value.Blockhash)
 	if err != nil {
 		log.Printf("Failed to create listing transaction: %v", err)
 		return
@@ -127,7 +127,7 @@ func demonstrateOtherOperations(client *zonnegosdk.Client, payer solana.PublicKe
 		return
 	}
 
-	buyTx, err := client.CreateTransactionForCrossmint(buyInstruction, payer, recentBlockhash.Value.Blockhash)
+	buyTx, err := client.CreateTransactionForCrossmint(buyInstruction, payer, latestBlockhash.Value.Blockhash)
 	if err != nil {
 		log.Printf("Failed to create buy transaction: %v", err)
 		return

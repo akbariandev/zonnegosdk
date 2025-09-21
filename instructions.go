@@ -12,14 +12,14 @@ import (
 
 // Instruction discriminators (first 8 bytes of each instruction)
 var (
-	InitializeGridDiscriminator        = [8]byte{175, 175, 109, 31, 13, 152, 155, 237}
-	InitializeProducerDiscriminator    = [8]byte{12, 51, 59, 67, 52, 36, 206, 188}
-	InitializeConsumerDiscriminator    = [8]byte{111, 17, 185, 250, 60, 122, 38, 254}
-	MintEnergyTokensDiscriminator      = [8]byte{145, 138, 166, 112, 142, 73, 199, 45}
-	ListTokensForSaleDiscriminator     = [8]byte{107, 233, 40, 72, 85, 36, 174, 155}
-	CancelListingDiscriminator         = [8]byte{232, 219, 223, 41, 219, 236, 220, 190}
-	BuyTokensDiscriminator             = [8]byte{102, 6, 61, 18, 1, 218, 235, 234}
-	MintConsumptionTokensDiscriminator = [8]byte{134, 250, 50, 37, 82, 88, 162, 124}
+	InitializeGridDiscriminator        = [8]byte{30, 224, 57, 59, 226, 1, 253, 219}
+	InitializeProducerDiscriminator    = [8]byte{168, 203, 156, 75, 245, 233, 21, 201}
+	InitializeConsumerDiscriminator    = [8]byte{228, 176, 96, 150, 209, 224, 65, 98}
+	MintEnergyTokensDiscriminator      = [8]byte{147, 199, 3, 69, 8, 89, 72, 226}
+	ListTokensForSaleDiscriminator     = [8]byte{213, 6, 33, 225, 91, 199, 59, 195}
+	CancelListingDiscriminator         = [8]byte{41, 183, 50, 232, 230, 233, 157, 70}
+	BuyTokensDiscriminator             = [8]byte{189, 21, 230, 133, 247, 2, 110, 42}
+	MintConsumptionTokensDiscriminator = [8]byte{75, 241, 244, 71, 205, 59, 169, 126}
 )
 
 // InitializeGrid creates an instruction to initialize a grid account
@@ -369,16 +369,16 @@ func (c *Client) MintEnergyTokensForCrossmint(params MintRecordCreationParams, p
 		return "", fmt.Errorf("failed to create mint energy tokens instruction: %w", err)
 	}
 
-	// Get recent blockhash from RPC
-	recentBlockhash, err := c.rpcClient.GetRecentBlockhash(context.Background(), rpc.CommitmentFinalized)
+	// Get latest blockhash from RPC
+	latestBlockhash, err := c.rpcClient.GetLatestBlockhash(context.Background(), rpc.CommitmentFinalized)
 	if err != nil {
-		return "", fmt.Errorf("failed to get recent blockhash: %w", err)
+		return "", fmt.Errorf("failed to get latest blockhash: %w", err)
 	}
 
 	// Create the transaction
 	transaction, err := solana.NewTransaction(
 		[]solana.Instruction{instruction},
-		recentBlockhash.Value.Blockhash,
+		latestBlockhash.Value.Blockhash,
 		solana.TransactionPayer(payer),
 	)
 	if err != nil {
@@ -397,11 +397,11 @@ func (c *Client) MintEnergyTokensForCrossmint(params MintRecordCreationParams, p
 }
 
 // CreateTransactionForCrossmint creates a base58-encoded transaction from any instruction for Crossmint
-func (c *Client) CreateTransactionForCrossmint(instruction solana.Instruction, payer solana.PublicKey, recentBlockhash solana.Hash) (string, error) {
+func (c *Client) CreateTransactionForCrossmint(instruction solana.Instruction, payer solana.PublicKey, latestBlockhash solana.Hash) (string, error) {
 	// Create the transaction
 	transaction, err := solana.NewTransaction(
 		[]solana.Instruction{instruction},
-		recentBlockhash,
+		latestBlockhash,
 		solana.TransactionPayer(payer),
 	)
 	if err != nil {
